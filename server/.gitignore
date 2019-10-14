@@ -1,0 +1,6 @@
+venv
+deepspeech-*
+audio*
+*.wav
+*.webm
+output.txt

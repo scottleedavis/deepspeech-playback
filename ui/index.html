@@ -31,6 +31,7 @@
 <body>
 
 <audio id="myAudio" class="video-js vjs-default-skin"></audio>
+<span id="myText"></span>
 
 <script>
 /* eslint-disable */
@@ -87,26 +88,27 @@ player.on('startRecord', function() {
 });
 
 // user completed recording and stream is available
-player.on('finishRecord', function() {
+player.on('finishRecord', async function() {
     // the blob object contains the recorded data that
     // can be downloaded by the user, stored on server etc.
     console.log('finished recording:', player.recordedData);
 
     var data = player.recordedData;
-    var serverUrl = '/upload';
+    var serverUrl = 'http://localhost:4444/';
     var formData = new FormData();
     formData.append('file', data, data.name);
 
     console.log('uploading recording:', data.name);
 
-    fetch(serverUrl, {
-        method: 'POST',
-        body: formData
-    }).then(
-        success => console.log('recording upload complete.')
-    ).catch(
-        error => console.error('an upload error occurred!')
-    );
+    const response = await fetch(serverUrl, {
+                                method: 'POST',
+                                body: formData
+                            });
+    const myJson = await response.json();
+    console.log(myJson);
+    document.querySelector("#myText").innerText = myJson.data;
+
+
 });
 </script>
 </body>
